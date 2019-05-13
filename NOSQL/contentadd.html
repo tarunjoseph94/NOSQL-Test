@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Angular</title>
+        <script type="text/javascript" src="js/angular.js">
+        </script>
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/materialize.min.css">
+        <script type="text/javascript" src="js/materialize.min.js"></script>
+    </head>
+    <style >
+    .invalid {
+    color:red;
+}
+    </style>
+<body>
+  <nav>
+   <div class="nav-wrapper">
+
+     <ul id="nav-mobile" class="right hide-on-med-and-down">
+       <a href="#" class="brand-logo center">NOSQL</a>
+       <li><a href="contentadd.html">Add currency</a></li>
+       <li><a href="contentshow.php">Calculate Price</a></li>
+
+     </ul>
+   </div>
+ </nav>
+  <div class="row">
+
+        <div class="container" ng-app="contentStoring" ng-controller="addContent">
+            <!-- <div class="col s3"></div> -->
+            <div class="col s4">
+            <h2>Add Currency</h2>
+
+                <div class="Adding">
+            <form name="contentSystem" novaidate>
+
+                    <p>Enter the Currency name<input type="text" id="curname" name="myName" ng-model="myName"  required ></p>
+                    <p class="invalid" ng-if="contentSystem.myName.$invalid && contentSystem.myName.$touched">Enter Currency name</p>
+                    <p>Enter the Rate</p>
+                    <input type="number" name="myRate" id="currate" ng-model="myRate"   required if-Number>
+                    <p class="invalid" ng-if="contentSystem.myRate.$invalid && contentSystem.myRate.$touched">Enter only characters</p>
+                    
+                    <button class="btn waves-effect waves-light" ng-show="contentSystem.$valid" onClick="submitData()" type="submit" name="action">Submit
+                    </button>
+                  </div>
+                </div>
+                <div class="col s4 offset-s4">
+                     <div class="pagePreview" >
+                    <h2>Rate Preview</h2>
+                    <div class="divider"></div>
+                    <h4>Currency name: {{myName}}</h4>
+					<sub>Rate :{{myRate}}</sub>
+                    <p class="flow-text">Rate * 10 = {{myRate*10}}</p>
+
+                    </div>
+
+                </form>
+                </div>
+                <div id="resultLocal"></div>
+              </div>
+            <script type="text/javascript">
+            var app=angular.module("contentStoring",[]);
+
+            app.controller('addContent',function($scope)
+                          {
+
+                          $scope.myName="";
+                          $scope.myRate="";
+                        
+
+                           
+                          //            console.log($scope.    messageDump);
+                          });
+            //Check if only number
+            app.directive('if-Number', function() {
+         return {
+        require: 'ngModel',
+        link: function(scope, element, attr, mCtrl) {
+            function myValidation(value) {
+                if (/^[0-9]*$/g.test(value)) {
+                    mCtrl.$setValidity('if-Number', true);
+                } else {
+                    mCtrl.$setValidity('if-Number', false);
+                }
+                return value;
+            }
+            mCtrl.$parsers.push(myValidation);
+                    }
+                };
+            });
+
+            function submitData()
+            {
+                var curname=document.getElementById("curname").value;
+                var currate=document.getElementById("currate").value;
+               
+                var formData=new FormData();
+                formData.append('curname',curname);
+                formData.append('currate',currate);
+                //  for (var pair of formData.entries()) {
+                //  console.log(pair[0]+ ', ' + pair[1]);
+                //}
+                $.ajax({
+                    type: "POST",
+                    url: "insert_data_ajax.php",
+                    processData: false,
+                    contentType: false,
+                    data:formData,
+                    success:function(result)
+                    {
+                    if(result=='Success')
+                    {
+                        alert("Sucesfully Added");
+                        window.location.replace("http://localhost:8080/NOSQL-master/contentadd.php");
+                        
+                    }
+                    else {
+                        alert("Content has not been updated");
+                
+          
+                    }
+            }
+                });
+                }
+            </script>
+
+            </div>
+        </div>
+      </div>
+</body>
+</html>
