@@ -3,11 +3,11 @@
 
 try {
       $id=(int)$_POST['id'];
-    $mng = new MongoDB\Driver\Manager("mongodb://localhost:27017");  
+    $mng = new MongoDB\Driver\Manager("mongodb://localhost:27017");
     $bulk = new MongoDB\Driver\BulkWrite;
     $bulk->delete(['_id' => $id]);
-    $result = $mng->executeBulkWrite('test.cony', $bulk);
- 
+    $result = $mng->executeBulkWrite('test.cur', $bulk);
+
     $writeConcern = new MongoDB\Driver\WriteConcern(MongoDB\Driver\WriteConcern::MAJORITY, 1000);
 
 } catch (MongoDB\Driver\Exception\BulkWriteException $e) {
@@ -34,5 +34,5 @@ try {
     printf("Other error: %s\n", $e->getMessage());
     exit;
 }
-echo "Success"; 
+echo "Success";
 ?>
